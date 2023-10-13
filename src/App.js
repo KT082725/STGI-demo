@@ -48,16 +48,48 @@
 
 import "./App.css";
 import NavbarHome from "./components/Navbar";
-import Demo from "./components/Demo"
-
+// import Demo from "./components/Demo"
+import Alert from "./components/Alert"
+import { useState } from "react";
+import { BrowserRouter, Routes, Route} from "react-router-dom"; 
+import LandingPage from "./pages/LandingPage";
+import Blogs from "./pages/Blogs";
+import Contact from "./pages/Contact";
+import Home from "./pages/Home";
+import RegisterPage from "./pages/RegisterPage";
+// import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 function App() {
+  const [alert,setAlert]=useState(null);
+  const showAlert=(message,type)=>{
+    setAlert({
+      msg:message,
+      type:type
+    })
+    setTimeout(()=>{
+      setAlert(null);
+    },1500);
+  }
   return (
     <>
       <div class="moon"></div>
+      <Alert alert={alert}></Alert>
       <NavbarHome />
-
-          <Demo />
-       <div class="filter"></div>
+      <BrowserRouter>
+      <Routes>
+        {/* <Route path="/" element={<Layout />}> */}
+          <Route path="/" element={<LandingPage showAlert={showAlert}/>} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="contact" element={<Contact />} />
+          {/* <Route path="*" element={<NoPage />} /> */}
+          {/* <Route path="/auth/signup" element={<Signup showAlert={showAlert}/>} /> */}
+          <Route path="/home" element={<Home showAlert={showAlert}/>} />
+          <Route path="/register" element={<RegisterPage showAlert={showAlert}/>} />
+          {/* <Route path="/forget" element={<ForgetPasswordPage />} /> */}
+        {/* </Route> */}
+      </Routes>
+    </BrowserRouter>
+          {/* <Demo /> */}
+       {/* <div class="filter"></div> */}
       <canvas id="canvas"></canvas> 
 
       <test />

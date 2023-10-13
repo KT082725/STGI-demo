@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {  useRef, useState } from 'react';
 import './drop-file-input.css';
 import { ImageConfig } from '../../config/ImageConfig'; 
 import uploadImg from '../../assets/cloud-upload-regular-240.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-
-const DropFileInput = () => {
-
+const DropFileInput = ({showAlert}) => {
+    let navigate=useNavigate()
     const wrapperRef = useRef(null);
 
     const [fileList, setFileList] = useState([]);
@@ -18,6 +18,9 @@ const DropFileInput = () => {
     const onDrop = () => wrapperRef.current.classList.remove('dragover');
 
     const onFileDrop = (e) => {
+        if(!localStorage.getItem('token')) {
+            navigate("/");
+            showAlert("Please Login First","danger")}
         const newFile = e.target.files[0];
         if (newFile) {
             const updatedList = [newFile];
@@ -32,8 +35,6 @@ const DropFileInput = () => {
         setFileList(updatedList);
         // props.onFileChange(updatedList);
     }
-    useEffect(()=>
-    {if(fileList){console.log(fileList[0])}})
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -50,10 +51,27 @@ const DropFileInput = () => {
             },
           });
           console.log(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+          var isVerified = false;
+          if (response.data.response !== 'None') {
+              isVerified = true;
+          }
+          console.log(isVerified)
+          formData.append('isVerified', isVerified);
+          const user=JSON.parse(localStorage.getItem('user'))
+          console.log(user.id)
+          formData.append('userId',user.id)
+          // formData.append('userId',"6526e7e10b274044f1edd8c4")
+          const res = await axios.post('/demo/', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+          })
+          console.log(res.data);
+      }
+      catch (error) {
+          console.log(error);
+      }
+      }
     return (
         <>
         

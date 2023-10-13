@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DropFileInput from '../components/drop-file-input/DropFileInput';
 
-const Home = () => {
+const Home = ({showAlert}) => {
   const [selectedFileType, setSelectedFileType] = useState('');
  // State to store the selected file type
     
@@ -25,7 +25,7 @@ const Home = () => {
           <option name="Voter ID">Voter ID</option>
         </select>
         
-        <DropFileInput/>
+        <DropFileInput showAlert={showAlert}/>
         
       </div>
     </div>
